@@ -23,3 +23,14 @@ For now this shall work. But in the future when we add other dependencies, run
 ```bash
 pip3 install -r requirements.txt
 ```
+
+
+# API key
+
+You will require an API from Anthropic for this project.
+It needs to be exported as an environment variable named `ANTHROPIC_API_KEY`.
+
+> [!IMPORTANT]
+> **Please do this export yourself. There is no .env file.
+> I didn't want to add a dependency from an unknown source just to read a single enviroment variable.**
+

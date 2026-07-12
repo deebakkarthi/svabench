@@ -34,3 +34,11 @@ It needs to be exported as an environment variable named `ANTHROPIC_API_KEY`.
 > **Please do this export yourself. There is no .env file.
 > I didn't want to add a dependency from an unknown source just to read a single enviroment variable.**
 
+
+# Getting the RTL files
+
+The RTL files are available at [svabench_test_designs](https://github.com/deebakkarthi/svabench_test_designs)
+
+Run `scripts/fetch_benchmarks.sh`
+
+This will download the RTL files into the `bench/` folder

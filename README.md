@@ -42,3 +42,9 @@ The RTL files are available at [svabench_test_designs](https://github.com/deebak
 Run `scripts/fetch_benchmarks.sh`
 
 This will download the RTL files into the `bench/` folder
+
+
+# `scripts`
+
+This is a collection of the useful scripts that is auxillary to the main
+benchmark. The main benchmark will be a single python program.

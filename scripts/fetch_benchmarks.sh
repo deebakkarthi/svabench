@@ -3,6 +3,7 @@
 # Script to fetch the RTL files from svabench_test_designs
 # and remove extraneous stuff
 
+rm -rf bench/
 git clone --depth=1 https://github.com/deebakkarthi/svabench_test_designs bench
 # Remove all the folders except bench/
 find bench/ -depth -maxdepth 1  -type d ! -name bench -exec rm -rf {} \;

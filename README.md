@@ -48,3 +48,20 @@ This will download the RTL files into the `bench/` folder
 
 This is a collection of the useful scripts that is auxillary to the main
 benchmark. The main benchmark will be a single python program.
+
+
+# `prompts`
+This folder contains the prompt given to the LLM. The prompt's objective
+to be as clear as possible while not inducing any bias. This bias can be both
+ways - positive and negative. The instructions are very clear but very brief.
+We want to the inherent procivilities of the model and then modify the prompt
+to optimize/fix. We wanted to avoid premature optimization which would also
+cause noisy benchmarks.
+
+# Goal
+The goal of the benchmark is to evaluate purely the RTL2SVA capabilities of a
+model. We don't concern ourselves with bug hunting or golden designs. Given
+some RTL design, can the model convert the functionality into assertions?
+Note that this also implies that bugs will be carried over but this is
+intentional.
+

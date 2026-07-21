@@ -1,4 +1,4 @@
-`default_nettype none
+ `default_nettype none
 module f36m_mult(clk, reset, a, b, c, done);
     input clk, reset;
     input [(12*97-1):0] a, b;
@@ -159,7 +159,7 @@ module second_part(clk, reset, a, c, done);
             done <= 1; c <= {c5,c4,c3,c2,c1,c0};
           end
 endmodule
-`default_nettype none
+ `default_nettype none
 module f32m_mux6(v0, v1, v2, v3, v4, v5, l0, l1, l2, l3, l4, l5, out);
     input l0, l1, l2, l3, l4, l5;
     input [(4*97-1):0] v0, v1, v2, v3, v4, v5;
@@ -259,7 +259,7 @@ module f32m_cubic(clk, a, c);
         c <= {c1,c0};
 endmodule
 `default_nettype none
-`default_nettype none
+ `default_nettype none
 module f33m_mux2(v1, l1, v2, l2, out);
     input [(6*97-1):0] v1, v2;
     input l1, l2;
@@ -549,7 +549,7 @@ module f33m_inv(clk, reset, a, c, done);
             done <= 1; c <= {c2,c1,c0};
           end
 endmodule
-`default_nettype none
+ `default_nettype none
 module func6(clk, reset, in, out);
     input clk, reset, in;
     output out;
@@ -565,7 +565,7 @@ module func6(clk, reset, in, out);
           end
     assign out = {reg2,reg1}==2'b01 ? 1 : 0;
 endmodule
-`default_nettype none
+ `default_nettype none
 module f3m_mux3(v1, l1, v2, l2, v3, l3, out);
     input [(2*97-1):0] v1, v2, v3;
     input l1, l2, l3;
@@ -1711,7 +1711,7 @@ wire [1:0] w973; f3_add a974 (w967, w969, w973);
 wire [1:0] w975; f3_add a976 (w973, w971, w975);
 assign c[193:192] = w975;
 endmodule
-`default_nettype none
+ `default_nettype none
 module duursma_lee_algo(clk, reset, xp, yp, xr, yr, done, out);
     input clk, reset;
     input [(2*97-1):0] xp, yp, xr, yr;

@@ -1917,7 +1917,7 @@ always @(posedge clk or posedge rst )begin
  end 
 end 
 endmodule
-`timescale 1ns / 1ns
+ `timescale 1ns / 1ns
 module sd_rx_fifo
   (
    input [4-1:0] d,
@@ -2001,7 +2001,7 @@ module sd_rx_fifo
    assign mem_empt = ( adr_i-adr_o);
    assign q = ram[adr_o[4-2:0]];
 endmodule
-`timescale 1ns / 1ns
+ `timescale 1ns / 1ns
 module sd_tx_fifo
   (
    input [32-1:0] d,

@@ -1,4 +1,4 @@
-`timescale 1ns / 1ns
+ `timescale 1ns / 1ns
 module ethmac
 (
   wb_clk_i, wb_rst_i, wb_dat_i, wb_dat_o, 
@@ -723,7 +723,7 @@ eth_macstatus macstatus1
   .r_FullD(r_FullD)
 );
 endmodule
-`timescale 1ns / 1ns
+ `timescale 1ns / 1ns
 module eth_clockgen(Clk, Reset, Divider, MdcEn, MdcEn_n, Mdc);
 input       Clk;               
 input       Reset;             
@@ -766,7 +766,7 @@ assign CountEq0 = Counter == 8'h0;
 assign MdcEn = CountEq0 & ~Mdc;
 assign MdcEn_n = CountEq0 & Mdc;
 endmodule
-`timescale 1ns / 1ns
+ `timescale 1ns / 1ns
 module eth_cop
 (
   wb_clk_i, wb_rst_i, 
@@ -1052,7 +1052,7 @@ begin
   end
 end
 endmodule
-`timescale 1ns / 1ns
+ `timescale 1ns / 1ns
 module eth_crc (Clk, Reset, Data, Enable, Initialize, Crc, CrcError);
 input Clk;
 input Reset;
@@ -1107,7 +1107,7 @@ begin
 end
 assign CrcError = Crc[31:0] != 32'hc704dd7b;   
 endmodule
-`timescale 1ns / 1ns
+ `timescale 1ns / 1ns
 module eth_fifo (data_in, data_out, clk, reset, write, read, clear,
                  almost_full, full, almost_empty, empty, cnt);
 parameter DATA_WIDTH    = 32;
@@ -1186,7 +1186,7 @@ assign almost_full  = &cnt[CNT_WIDTH-2:0];
       data_out <= fifo[read_pointer];
   end
 endmodule
-`timescale 1ns / 1ns
+ `timescale 1ns / 1ns
 module eth_maccontrol (MTxClk, MRxClk, TxReset, RxReset, TPauseRq, TxDataIn, TxStartFrmIn, TxUsedDataIn, 
                        TxEndFrmIn, TxDoneIn, TxAbortIn, RxData, RxValid, RxStartFrm, RxEndFrm, ReceiveEnd, 
                        ReceivedPacketGood, ReceivedLengthOK, TxFlow, RxFlow, DlyCrcEn, TxPauseTV, 
@@ -1320,7 +1320,7 @@ eth_transmitcontrol transmitcontrol1
  .CtrlMux(CtrlMux), .ControlData(ControlData), .WillSendControlFrame(WillSendControlFrame), .BlockTxDone(BlockTxDone)
 );
 endmodule
-`timescale 1ns / 1ns
+ `timescale 1ns / 1ns
 module eth_macstatus(
                       MRxClk, Reset, ReceivedLengthOK, ReceiveEnd, ReceivedPacketGood, RxCrcError, 
                       MRxErr, MRxDV, RxStateSFD, RxStateData, RxStatePreamble, RxStateIdle, Transmitting, 
@@ -1554,7 +1554,7 @@ begin
     CarrierSenseLost <= 1'b0;
 end
 endmodule
-`timescale 1ns / 1ns
+ `timescale 1ns / 1ns
 module eth_miim
 (
   Clk,
@@ -1837,7 +1837,7 @@ eth_outputcontrol outctrl(.Clk(Clk), .Reset(Reset), .MdcEn_n(MdcEn_n), .InProgre
                           .Mdo(Mdo), .MdoEn(MdoEn)
                          );
 endmodule
-`timescale 1ns / 1ns
+ `timescale 1ns / 1ns
 module eth_outputcontrol(Clk, Reset, InProgress, ShiftedBit, BitCounter, WriteOp, NoPre, MdcEn_n, Mdo, MdoEn);
 input         Clk;                 
 input         Reset;               
@@ -1895,7 +1895,7 @@ begin
     end
 end
 endmodule
-`timescale 1ns / 1ns
+ `timescale 1ns / 1ns
 module eth_random (MTxClk, Reset, StateJam, StateJam_q, RetryCnt, NibCnt, ByteCnt, 
                    RandomEq0, RandomEqByteCnt);
 input MTxClk;
@@ -1942,7 +1942,7 @@ end
 assign RandomEq0 = RandomLatched == 10'h0; 
 assign RandomEqByteCnt = ByteCnt[9:0] == RandomLatched & (&NibCnt[6:0]);
 endmodule
-`timescale 1ns / 1ns
+ `timescale 1ns / 1ns
 module eth_receivecontrol (MTxClk, MRxClk, TxReset, RxReset, RxData, RxValid, RxStartFrm, 
                            RxEndFrm, RxFlow, ReceiveEnd, MAC, DlyCrcEn, TxDoneIn, 
                            TxAbortIn, TxStartFrmOut, ReceivedLengthOK, ReceivedPacketGood, 
@@ -2225,7 +2225,7 @@ begin
     ReceivedPauseFrm <= 1'b1;        
 end
 endmodule
-`timescale 1ns / 1ns
+ `timescale 1ns / 1ns
 module eth_registers( DataIn, Address, Rw, Cs, Clk, Reset, DataOut, 
                       r_RecSmall, r_Pad, r_HugEn, r_CrcEn, r_DlyCrcEn, 
                       r_FullD, r_ExDfrEn, r_NoBckof, r_LoopBck, r_IFG, 
@@ -3111,7 +3111,7 @@ assign int_o = irq_txb  & INT_MASKOut[0] |
                irq_rxc  & INT_MASKOut[6] ;
 assign INT_SOURCEOut = {{(32-7){1'b0}}, irq_rxc, irq_txc, irq_busy, irq_rxe, irq_rxb, irq_txe, irq_txb};
 endmodule
-`timescale 1ns / 1ns
+ `timescale 1ns / 1ns
 module eth_rxaddrcheck(MRxClk,  Reset, RxData, Broadcast ,r_Bro ,r_Pro,
                        ByteCntEq2, ByteCntEq3, ByteCntEq4, ByteCntEq5,
                        ByteCntEq6, ByteCntEq7, HASH0, HASH1, ByteCntEq0,
@@ -3226,7 +3226,7 @@ begin
 end
 assign HashBit = ByteHash[CrcHash[2:0]];
 endmodule
-`timescale 1ns / 1ns
+ `timescale 1ns / 1ns
 module eth_rxcounters 
   (
    MRxClk, Reset, MRxDV, StateIdle, StateSFD, StateData, StateDrop, StatePreamble, 
@@ -3336,7 +3336,7 @@ begin
     end
 end
 endmodule
-`timescale 1ns / 1ns
+ `timescale 1ns / 1ns
 module eth_register(DataIn, DataOut, Write, Clk, Reset, SyncReset);
 parameter WIDTH = 8;  
 parameter RESET_VALUE = 0;
@@ -3359,7 +3359,7 @@ begin
     DataOut<= DataIn;
 end
 endmodule    
-`timescale 1ns / 1ns
+ `timescale 1ns / 1ns
 module eth_rxethmac (MRxClk, MRxDV, MRxD, Reset, Transmitting, MaxFL, r_IFG,
                      HugEn, DlyCrcEn, RxData, RxValid, RxStartFrm, RxEndFrm,
                      ByteCnt, ByteCntEq0, ByteCntGreat2, ByteCntMaxFrame,
@@ -3633,7 +3633,7 @@ begin
     end
 end
 endmodule
-`timescale 1ns / 1ns
+ `timescale 1ns / 1ns
 module eth_rxstatem (MRxClk, Reset, MRxDV, ByteCntEq0, ByteCntGreat2, Transmitting, MRxDEq5, MRxDEqD, 
                      IFGCounterEq24, ByteCntMaxFrame, StateData, StateIdle, StatePreamble, StateSFD, 
                      StateDrop
@@ -3719,7 +3719,7 @@ begin
 end
 assign StateData[1:0] = {StateData1, StateData0};
 endmodule
-`timescale 1ns / 1ns
+ `timescale 1ns / 1ns
 module eth_spram_256x32(
 	clk, rst, ce, we, oe, addr, di, dato
 );
@@ -3766,7 +3766,7 @@ module eth_spram_256x32(
       end
    endtask
 endmodule
-`timescale 1ns / 1ns
+ `timescale 1ns / 1ns
 module eth_shiftreg(Clk, Reset, MdcEn_n, Mdi, Fiad, Rgad, CtrlData, WriteOp, ByteSelect, 
                     LatchByte, ShiftedBit, Prsd, LinkFail);
 input       Clk;               
@@ -3826,7 +3826,7 @@ begin
 end
 assign ShiftedBit = ShiftReg[7];
 endmodule
-`timescale 1ns / 1ns
+ `timescale 1ns / 1ns
 module eth_transmitcontrol (MTxClk, TxReset, TxUsedDataIn, TxUsedDataOut, TxDoneIn, TxAbortIn, 
                             TxStartFrmIn, TPauseRq, TxUsedDataOutDetected, TxFlow, DlyCrcEn, 
                             TxPauseTV, MAC, TxCtrlStartFrm, TxCtrlEndFrm, SendingCtrlFrm, CtrlMux, 
@@ -4015,7 +4015,7 @@ begin
     ControlData[7:0] <=  MuxedCtrlData[7:0];
 end
 endmodule
-`timescale 1ns / 1ns
+ `timescale 1ns / 1ns
 module eth_txcounters (StatePreamble, StateIPG, StateData, StatePAD, StateFCS, StateJam, 
                        StateBackOff, StateDefer, StateIdle, StartDefer, StartIPG, StartFCS, 
                        StartJam, StartBackoff, TxStartFrm, MTxClk, Reset, MinFL, MaxFL, HugEn, 
@@ -4118,7 +4118,7 @@ begin
     end
 end
 endmodule
-`timescale 1ns / 1ns
+ `timescale 1ns / 1ns
 module eth_txethmac (MTxClk, Reset, TxStartFrm, TxEndFrm, TxUnderRun, TxData, CarrierSense, 
                      Collision, Pad, CrcEn, FullD, HugEn, DlyCrcEn, MinFL, MaxFL, IPGT, 
                      IPGR1, IPGR2, CollValid, MaxRet, NoBckof, ExDfrEn, 
@@ -4426,7 +4426,7 @@ eth_crc txcrc (.Clk(MTxClk), .Reset(Reset), .Data(Data_Crc), .Enable(Enable_Crc)
 eth_random random1 (.MTxClk(MTxClk), .Reset(Reset), .StateJam(StateJam), .StateJam_q(StateJam_q), .RetryCnt(RetryCnt), 
                     .NibCnt(NibCnt), .ByteCnt(ByteCnt[9:0]), .RandomEq0(RandomEq0), .RandomEqByteCnt(RandomEqByteCnt));
 endmodule
-`timescale 1ns / 1ns
+ `timescale 1ns / 1ns
 module eth_txstatem  (MTxClk, Reset, ExcessiveDefer, CarrierSense, NibCnt, IPGT, IPGR1, 
                       IPGR2, FullD, TxStartFrm, TxEndFrm, TxUnderRun, Collision, UnderRun, 
                       StartTxDone, TooBig, NibCntEq7, NibCntEq15, MaxFrame, Pad, CrcEn, 
@@ -4584,7 +4584,7 @@ begin
     end
 end
 endmodule
-`timescale 1ns / 1ns
+ `timescale 1ns / 1ns
 module eth_wishbone
   (
    WB_CLK_I, WB_DAT_I, WB_DAT_O, 

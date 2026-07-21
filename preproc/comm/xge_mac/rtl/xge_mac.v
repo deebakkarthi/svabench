@@ -1054,7 +1054,7 @@ module rx_enqueue(
     nextCRC32_D8 = NewCRC;
   end
   endfunction
-function [63:0] reverse_64b;
+ function [63:0] reverse_64b;
   input [63:0]   data;
   integer        i;
     begin
@@ -1959,7 +1959,7 @@ module tx_dequeue(
     nextCRC32_D8 = NewCRC;
   end
   endfunction
-function [63:0] reverse_64b;
+ function [63:0] reverse_64b;
   input [63:0]   data;
   integer        i;
     begin
@@ -2773,7 +2773,7 @@ module tx_enqueue(
     nextCRC32_D8 = NewCRC;
   end
   endfunction
-function [63:0] reverse_64b;
+ function [63:0] reverse_64b;
   input [63:0]   data;
   integer        i;
     begin

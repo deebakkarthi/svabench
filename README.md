@@ -7,6 +7,8 @@ SystemVerilog Assertion Generation Benchmark for Large Language Models
 	- This provides the `vppreproc` binary which we use for preprocessing
 	- If you have another valid SystemVerilog Preprocessor, you can
 	modify `scripts/preproc.sh` to use that instead.
+	- `iverilog`'s preprocessor `ivpp` isn't as customizable as `vppreproc`
+	- TODO: write a small binary in `slang` to perform this
 
 # Python Enviroment
 Though Claude's SDK is available in many languages, this project uses

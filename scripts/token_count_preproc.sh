@@ -2,11 +2,11 @@
 #
 # Return the token counts of the preprocessed files
 
-mapfile -t file_arr < <(find preproc/ -type f -name '*.v')
+mapfile -t benchmark_arr < <(find preproc/ -type d -name rtl -printf "%h\n" | sort)
 
-echo "benchmark, tokens, words"
-for file in "${file_arr[@]}"; do
-	num_tokens=$(scripts/_token_count.py "$file")
-	num_words=$(cat "$file" | wc -w | awk '{$1=$1}1')
-	echo "$(basename "$file"), $num_tokens, $num_words"
+echo "benchmark, tokens"
+for benchmark in "${benchmark_arr[@]}"; do
+	mapfile -t files_arr < <(find "$benchmark/rtl" -type f)
+	num_tokens="$(./scripts/_token_count.py "${files_arr[@]}")"
+	echo -e "${benchmark#*/}, $num_tokens"
 done

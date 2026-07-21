@@ -1,4 +1,4 @@
-benchmark, tokens
+benchmark, tokens_after_preproc
 arith/ecg, 29623
 arith/pairing, 36402
 arith/tiny_tate_bilinear_pairing, 43788

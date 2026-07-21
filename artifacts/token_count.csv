@@ -1,16 +1,16 @@
-benchmark, tokens, words
-vga_lcd, 73527, 18544
-openmsp430, 207072, 46379
-sha3, 9498, 2659
-tiny_aes, 13377, 3437
-sdcard_mass_storage_controller, 44137, 8072
-sockit_owm, 7812, 2214
-i2c, 23188, 5835
-xge_mac, 79658, 18141
-ethmac, 194000, 43247
-pairing, 42150, 11131
-ecg, 33430, 8921
-tiny_tate_bilinear_pairing, 46775, 11627
-reed_solomon_decoder, 52227, 9353
-hpdmc, 63501, 15307
-sdr_ctrl, 65383, 14909
+benchmark, tokens
+arith/ecg, 31748
+arith/pairing, 39447
+arith/tiny_tate_bilinear_pairing, 44807
+comm/ethmac, 147933
+comm/i2c, 17344
+comm/sdcard_mass_storage_controller, 42604
+comm/sockit_owm, 7374
+comm/xge_mac, 64430
+crypto/sha3, 8022
+crypto/tiny_aes, 12639
+ecc/reed_solomon_decoder, 49115
+mem/hpdmc, 56235
+mem/sdr_ctrl, 57687
+proc/openmsp430, 179179
+vid/vga_lcd, 51906

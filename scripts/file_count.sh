@@ -4,6 +4,7 @@
 
 mapfile -t benchmark_arr < <(find bench/ -type d -name rtl -printf "%h\n" | sort)
 
+echo "benchmark, files"
 for benchmark in "${benchmark_arr[@]}"; do
 	# Keep the files array around just in case
 	# I know that I can find the count by piping find into wc

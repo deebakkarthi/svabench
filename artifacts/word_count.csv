@@ -1,0 +1,16 @@
+benchmark, words
+arith/ecg, 8266
+arith/pairing, 10083
+arith/tiny_tate_bilinear_pairing, 10843
+comm/ethmac, 26547
+comm/i2c, 4229
+comm/sdcard_mass_storage_controller, 7539
+comm/sockit_owm, 2059
+comm/xge_mac, 12735
+crypto/sha3, 2071
+crypto/tiny_aes, 3143
+ecc/reed_solomon_decoder, 8069
+mem/hpdmc, 12692
+mem/sdr_ctrl, 12360
+proc/openmsp430, 38103
+vid/vga_lcd, 12471

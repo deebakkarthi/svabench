@@ -1,0 +1,16 @@
+benchmark, files
+arith/ecg, 5
+arith/pairing, 8
+arith/tiny_tate_bilinear_pairing, 8
+comm/ethmac, 28
+comm/i2c, 4
+comm/sdcard_mass_storage_controller, 16
+comm/sockit_owm, 1
+comm/xge_mac, 25
+crypto/sha3, 6
+crypto/tiny_aes, 3
+ecc/reed_solomon_decoder, 12
+mem/hpdmc, 16
+mem/sdr_ctrl, 11
+proc/openmsp430, 29
+vid/vga_lcd, 17

@@ -1,6 +1,12 @@
 # svabench
 SystemVerilog Assertion Generation Benchmark for Large Language Models
 
+# Dependencies
+- `>=python3.9`
+- `perl` and `Verilog::Language` module
+	- This provides the `vppreproc` binary which we use for preprocessing
+	- If you have another valid SystemVerilog Preprocessor, you can
+	modify `scripts/preproc.sh` to use that instead.
 
 # Python Enviroment
 Though Claude's SDK is available in many languages, this project uses

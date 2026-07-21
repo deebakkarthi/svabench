@@ -1,0 +1,16 @@
+benchmark, modules
+arith/ecg, 30
+arith/pairing, 46
+arith/tiny_tate_bilinear_pairing, 18
+comm/ethmac, 24
+comm/i2c, 3
+comm/sdcard_mass_storage_controller, 14
+comm/sockit_owm, 1
+comm/xge_mac, 20
+crypto/sha3, 6
+crypto/tiny_aes, 10
+ecc/reed_solomon_decoder, 12
+mem/hpdmc, 15
+mem/sdr_ctrl, 9
+proc/openmsp430, 25
+vid/vga_lcd, 15

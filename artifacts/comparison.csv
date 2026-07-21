@@ -1,0 +1,16 @@
+benchmark,                            tokens,  words,  files,  modules,  tokens_after_preproc
+arith/ecg,                            31748,   8266,   5,      30,       29623
+arith/pairing,                        39447,   10083,  8,      46,       36402
+arith/tiny_tate_bilinear_pairing,     44807,   10843,  8,      18,       43788
+comm/ethmac,                          147933,  26547,  28,     24,       105111
+comm/i2c,                             17344,   4229,   4,      3,        13888
+comm/sdcard_mass_storage_controller,  42604,   7539,   16,     14,       33142
+comm/sockit_owm,                      7374,    2059,   1,      1,        5163
+comm/xge_mac,                         64430,   12735,  25,     20,       81007
+crypto/sha3,                          8022,    2071,   6,      6,        7531
+crypto/tiny_aes,                      12639,   3143,   3,      10,       12485
+ecc/reed_solomon_decoder,             49115,   8069,   12,     12,       41416
+mem/hpdmc,                            56235,   12692,  16,     15,       46492
+mem/sdr_ctrl,                         57687,   12360,  11,     9,        43838
+proc/openmsp430,                      179179,  38103,  29,     25,       96915
+vid/vga_lcd,                          51906,   12471,  17,     15,       33459

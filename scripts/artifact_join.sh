@@ -11,4 +11,6 @@ join_rec() {
 	fi
 }
 
-join_rec $(find artifacts/ -type f -name *.csv | xargs) | column -t
+join_rec $(find artifacts/ -type f\
+       	-name *.csv\
+       	! -name comparison.csv | xargs) | column -t

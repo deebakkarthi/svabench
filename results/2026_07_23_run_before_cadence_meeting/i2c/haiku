@@ -1,0 +1,53 @@
+```verilog
+// i2c_master_bit_ctrl
+assert property (always (scl_o == 1'b0));
+assert property (always (sda_o == 1'b0));
+assert property (always (sta_condition == (~sSDA & dSDA & sSCL)));
+assert property (always (sto_condition == (sSDA & ~dSDA & sSCL)));
+assert property (always (slave_reset == (sta_condition | sto_condition)));
+assert property (always (scl_oen == (master_mode ? scl_oen_master : scl_oen_slave)));
+assert property (always (sda_oen == (master_mode ? sda_oen_master : sda_oen_slave)));
+assert property (@(posedge clk) !nReset |=> cnt == 16'h0);
+assert property (@(posedge clk) !nReset |=> clk_en == 1'b1);
+assert property (@(posedge clk) !nReset |=> c_state == idle);
+assert property (@(posedge clk) !nReset |=> cmd_ack == 1'b0);
+assert property (@(posedge clk) !nReset |=> scl_oen_master == 1'b1);
+assert property (@(posedge clk) !nReset |=> sda_oen_master == 1'b1);
+assert property (@(posedge clk) rst |=> c_state == idle);
+assert property (@(posedge clk) rst |=> cmd_ack == 1'b0);
+assert property (@(posedge clk) rst |=> scl_oen_master == 1'b1);
+assert property (@(posedge clk) rst |=> sda_oen_master == 1'b1);
+assert property (@(posedge clk) al |=> c_state == idle);
+assert property (@(posedge clk) al |=> cmd_ack == 1'b0);
+
+// i2c_master_byte_ctrl
+assert property (always (dout == sr));
+assert property (always (go == ((read | write | stop) & ~cmd_ack)));
+assert property (always (cnt_done == ~(|dcnt)));
+assert property (always (core_txd == sr[7]));
+assert property (@(posedge clk) !nReset |=> sr == 8'h0);
+assert property (@(posedge clk) !nReset |=> dcnt == 3'h0);
+assert property (@(posedge clk) !nReset |=> c_state == ST_IDLE);
+assert property (@(posedge clk) rst |=> sr == 8'h0);
+assert property (@(posedge clk) rst |=> dcnt == 3'h0);
+assert property (@(posedge clk) rst |=> c_state == ST_IDLE);
+assert property (@(posedge clk) i2c_al |=> c_state == ST_IDLE);
+
+// i2c_master_top
+assert property (always (sr[7] == rxack));
+assert property (always (sr[6] == i2c_busy));
+assert property (always (sr[5] == al));
+assert property (always (sr[4] == slave_mode));
+assert property (always (sr[3] == slave_dat_avail));
+assert property (always (sr[2] == slave_dat_req));
+assert property (always (sr[1] == tip));
+assert property (always (sr[0] == irq_flag));
+assert property (@(posedge wb_clk_i) !rst_i |=> prer == 16'hffff);
+assert property (@(posedge wb_clk_i) !rst_i |=> ctr == 8'h0);
+assert property (@(posedge wb_clk_i) !rst_i |=> txr == 8'h0);
+assert property (@(posedge wb_clk_i) !rst_i |=> sladr == DEFAULT_SLAVE_ADDR);
+assert property (@(posedge wb_clk_i) wb_rst_i |=> prer == 16'hffff);
+assert property (@(posedge wb_clk_i) wb_rst_i |=> ctr == 8'h0);
+assert property (@(posedge wb_clk_i) wb_rst_i |=> txr == 8'h0);
+assert property (@(posedge wb_clk_i) wb_rst_i |=> sladr == DEFAULT_SLAVE_ADDR);
+```

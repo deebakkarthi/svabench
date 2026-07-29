@@ -1,0 +1,84 @@
+module sockit_owm_assert #(
+    parameter OVD_E =    1,
+    parameter CDR_E =    1,
+    parameter BDW   =   32,
+    parameter OWN   =    1,
+`ifdef __ICARUS__
+    parameter BAW   = (BDW==32) ? 1 : 2,
+`else
+    parameter BAW   = 1,
+`endif
+    parameter BTP_N = "5.0",
+    parameter BTP_O = "1.0",
+    parameter T_RSTH_N = (BTP_N == "7.5") ?  64 : (BTP_N == "5.0") ?  96 :  80,
+    parameter T_RSTL_N = (BTP_N == "7.5") ?  64 : (BTP_N == "5.0") ?  96 :  80,
+    parameter T_RSTP_N = (BTP_N == "7.5") ?  10 : (BTP_N == "5.0") ?  15 :  10,
+    parameter T_DAT0_N = (BTP_N == "7.5") ?   8 : (BTP_N == "5.0") ?  12 :  10,
+    parameter T_DAT1_N = (BTP_N == "7.5") ?   1 : (BTP_N == "5.0") ?   1 :   1,
+    parameter T_BITS_N = (BTP_N == "7.5") ?   2 : (BTP_N == "5.0") ?   3 :   2,
+    parameter T_RCVR_N = (BTP_N == "7.5") ?   1 : (BTP_N == "5.0") ?   1 :   1,
+    parameter T_IDLE_N = (BTP_N == "7.5") ? 128 : (BTP_N == "5.0") ? 200 : 160,
+    parameter T_RSTH_O = (BTP_O == "1.0") ?  48 :  96,
+    parameter T_RSTL_O = (BTP_O == "1.0") ?  48 :  96,
+    parameter T_RSTP_O = (BTP_O == "1.0") ?  10 :  15,
+    parameter T_DAT0_O = (BTP_O == "1.0") ?   6 :  12,
+    parameter T_DAT1_O = (BTP_O == "1.0") ?   1 :   2,
+    parameter T_BITS_O = (BTP_O == "1.0") ?   2 :   3,
+    parameter T_RCVR_O = (BTP_O == "1.0") ?   2 :   4,
+    parameter T_IDLE_O = (BTP_O == "1.0") ?  96 : 192,
+    parameter CDR_N = 5-1,
+    parameter CDR_O = 1-1
+) (
+    input           clk,
+    input           rst,
+    input           bus_ren,
+    input           bus_wen,
+    input [BAW-1:0] bus_adr,
+    input [BDW-1:0] bus_wdt,
+    input [BDW-1:0] bus_rdt,
+    input           bus_irq,
+    input [OWN-1:0] owr_p,
+    input [OWN-1:0] owr_e,
+    input [OWN-1:0] owr_i
+);
+
+  // sockit_owm
+  assert property (pls == (div == (owr_ovd ? cdr_o : cdr_n)));
+  assert property (owr_e == (owr_oen << owr_sel));
+  assert property (owr_p == owr_pwr);
+  assert property (owr_iln == owr_i[owr_sel]);
+  assert property (bus_irq == (irq_ena & irq_sts));
+  assert property (disable iff (rst) (bus_wen_ctl_sts |=> owr_rst == $past(bus_wdt[1])));
+  assert property (disable iff (rst) (bus_wen_ctl_sts |=> owr_dat == $past(bus_wdt[0])));
+  assert property (disable iff (rst) (bus_wen_ctl_sts |=> irq_ena == $past(bus_wdt[7])));
+  assert property (disable iff (rst) (bus_wen_ctl_sts |=> irq_sts == 1'b0));
+  assert property (disable iff (rst) (bus_wen_ctl_sts |=> owr_cyc == ($past(
+      bus_wdt[3]
+  ) & ~&$past(
+      bus_wdt[2:0]
+  ))));
+  assert property (disable iff (rst) (bus_wen_ctl_sts |=> owr_ovd == (OVD_E ? $past(
+      bus_wdt[2]
+  ) : 1'b0)));
+  assert property (disable iff (rst) (bus_wen_ctl_sts |=> cnt == ((&$past(
+      bus_wdt[1:0]
+  ) ? t_idl : $past(
+      bus_wdt[1]
+  ) ? t_rst : t_bit) - 1)));
+  assert property (disable iff (rst) (bus_ren_ctl_sts |=> irq_sts == 1'b0));
+  assert property (disable iff (rst) ((owr_cyc & ~pls & ~bus_wen) |=> div == $past(div) + 1));
+  assert property (disable iff (rst) (pls |=> div == 0));
+  assert property (disable iff (rst) (bus_wen |=> div == 0));
+  assert property (disable iff (rst) ((pls & ~bus_wen_ctl_sts) |=> cnt == $past(cnt) - 1));
+  assert property (disable iff (rst) ((pls & (cnt == t_zero)) |=> owr_cyc == 1'b0));
+  assert property (disable iff (rst) ((pls & (cnt == t_zero)) |=> irq_sts == 1'b1));
+  assert property (disable iff (rst) ((pls & (cnt == t_zero)) |=> owr_dat == $past(owr_smp)));
+  assert property ((pls & owr_rst & (cnt == t_rstp)) |=> owr_smp == $past(owr_iln));
+  assert property ((pls & ~owr_rst & (cnt == t_bits)) |=> owr_smp == $past(owr_iln));
+  assert property (disable iff (rst) (bus_wen_ctl_sts |=> owr_oen == ~&$past(bus_wdt[1:0])));
+  assert property (disable iff (rst) ((pls & owr_rst & (cnt == t_rsth)) |=> owr_oen == 1'b0));
+  assert property (disable iff (rst) ((pls & owr_dat & (cnt == t_dat1)) |=> owr_oen == 1'b0));
+  assert property (disable iff (rst) ((pls & (cnt == t_dat0)) |=> owr_oen == 1'b0));
+endmodule
+
+bind sockit_owm sockit_owm_assert sockit_owm_assert_instance (.*);

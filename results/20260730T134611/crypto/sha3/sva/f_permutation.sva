@@ -1,0 +1,12 @@
+// f_permutation
+assert property (@(posedge clk) accept == (in_ready & ~calc));
+assert property (@(posedge clk) ack == accept);
+assert property (@(posedge clk) update == (calc | accept));
+assert property (@(posedge clk) reset |=> (i == 0));
+assert property (@(posedge clk) reset |=> (calc == 0));
+assert property (@(posedge clk) reset |=> (out_ready == 0));
+assert property (@(posedge clk) reset |=> (out == 0));
+assert property (@(posedge clk) ~reset |=> (i == {$past(i[9:0]), $past(accept)}));
+assert property (@(posedge clk) ~reset |=> (calc == (($past(calc) & ~$past(i[10])) | $past(accept))));
+assert property (@(posedge clk) ~reset |=> (out_ready == ($past(accept) ? 1'b0 : ($past(i[10]) ? 1'b1 : $past(out_ready)))));
+assert property (@(posedge clk) ~reset |=> (out == ($past(update) ? $past(round_out) : $past(out))));

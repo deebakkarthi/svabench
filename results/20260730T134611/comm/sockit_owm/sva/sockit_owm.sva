@@ -1,0 +1,19 @@
+// sockit_owm
+assert property (@(posedge clk) bus_irq == (irq_ena & irq_sts));
+assert property (@(posedge clk) pls == (div == (owr_ovd ? cdr_o : cdr_n)));
+assert property (@(posedge clk) owr_e == (owr_oen << owr_sel));
+assert property (@(posedge clk) owr_p == owr_pwr);
+assert property (@(posedge clk) owr_iln == owr_i[owr_sel]);
+assert property (@(posedge clk) disable iff (rst) bus_wen |=> div == 'd0);
+assert property (@(posedge clk) disable iff (rst | bus_wen) pls |=> div == 'd0);
+assert property (@(posedge clk) disable iff (rst | bus_wen | pls) owr_cyc |=> div == $past(div) + 1'b1);
+assert property (@(posedge clk) disable iff (rst | bus_wen_ctl_sts) pls |=> cnt == $past(cnt) - 1'b1);
+assert property (@(posedge clk) disable iff (rst | bus_wen_ctl_sts) (pls & (cnt == 'd0)) |=> owr_cyc == 1'b0);
+assert property (@(posedge clk) disable iff (rst) bus_wen_ctl_sts |=> irq_sts == 1'b0);
+assert property (@(posedge clk) disable iff (rst | bus_wen_ctl_sts) (pls & (cnt == 'd0)) |=> irq_sts == 1'b1);
+assert property (@(posedge clk) disable iff (rst | bus_wen_ctl_sts | (pls & (cnt == 'd0))) bus_ren_ctl_sts |=> irq_sts == 1'b0);
+assert property (@(posedge clk) bus_wen_ctl_sts |=> irq_ena == $past(bus_wdt[7]));
+assert property (@(posedge clk) bus_wen_ctl_sts |=> owr_rst == $past(bus_wdt[1]));
+assert property (@(posedge clk) bus_wen_ctl_sts |=> owr_dat == $past(bus_wdt[0]));
+assert property (@(posedge clk) bus_wen_ctl_sts |=> owr_oen == ~&($past(bus_wdt[1:0])));
+assert property (@(posedge clk) $onehot0(owr_e));

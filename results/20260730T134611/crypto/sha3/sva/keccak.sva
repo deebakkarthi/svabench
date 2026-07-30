@@ -1,0 +1,13 @@
+```
+// keccak
+assert property (@(posedge clk) reset |=> (state == 0));
+assert property (@(posedge clk) (!reset && is_last) |=> (state == 1));
+assert property (@(posedge clk) (!reset && state) |=> state);
+assert property (@(posedge clk) reset |=> (i == 0));
+assert property (@(posedge clk) !reset |=> (i == {$past(i[9:0]), $past(state & f_ack)}));
+assert property (@(posedge clk) reset |=> (out_ready == 0));
+assert property (@(posedge clk) (!reset && i[10]) |=> (out_ready == 1));
+assert property (@(posedge clk) (!reset && out_ready) |=> out_ready);
+assert property (@(posedge clk) (~in_ready) |-> (~is_last));
+assert property (@(posedge clk) (in != $past(in)) |-> $past(f_ack));
+```

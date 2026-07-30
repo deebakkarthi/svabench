@@ -1,0 +1,12 @@
+// padder
+assert property (buffer_full == i[8]);
+assert property (out_ready == buffer_full);
+assert property (accept == ((~state) & in_ready & (~buffer_full)));
+assert property (update == ((accept | (state & (~buffer_full))) & (~done)));
+assert property (state |-> ((v1[63:8] == 0) && (v1[7] == i[7]) && (v1[6:0] == 0)));
+assert property ((~state & (is_last == 0)) |-> (v1 == in));
+assert property ((~state & is_last) |-> ((v1[7] == (v0[7] | i[7])) && (v1[63:8] == v0[63:8]) && (v1[6:0] == v0[6:0])));
+assert property (@(posedge clk) disable iff(reset) update |=> (out == {$past(out)[575-64:0], $past(v1)}));
+assert property (@(posedge clk) disable iff(reset) (f_ack | update) |=> ($past(f_ack) ? (i == 0) : (i == {$past(i)[7:0], 1'b1})));
+assert property (@(posedge clk) disable iff(reset) is_last |=> (state == 1));
+assert property (@(posedge clk) disable iff(reset) (state & out_ready) |=> (done == 1));

@@ -38,8 +38,12 @@ for benchmark in "${benchmarks[@]}"; do
 		prompt="${prompt/\{rtl\}/"$rtl"}"
 
 		# path to store the output assertions
-		output_file="$sva_dir/$(basename $file | sed 's/.v$//').sva"
+		# Replace file extension with .sva
+		output_file="$sva_dir/$(basename $file | sed 's/\.[^.]*$//').sva"
 
 		claude_infer "$prompt" > "$output_file"
+
+		# Sometimes backtick can be present
+		./scripts/_rm_fenced_code_blocks.sh "$output_file"
 	done
 done

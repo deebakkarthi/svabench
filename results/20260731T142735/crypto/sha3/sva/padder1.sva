@@ -1,0 +1,9 @@
+// padder1
+assert property (byte_num == 0 |-> out == 64'h0100000000000000);
+assert property (byte_num == 1 |-> out == {in[63:56], 56'h01000000000000});
+assert property (byte_num == 2 |-> out == {in[63:48], 48'h010000000000});
+assert property (byte_num == 3 |-> out == {in[63:40], 40'h0100000000});
+assert property (byte_num == 4 |-> out == {in[63:32], 32'h01000000});
+assert property (byte_num == 5 |-> out == {in[63:24], 24'h010000});
+assert property (byte_num == 6 |-> out == {in[63:16], 16'h0100});
+assert property (byte_num == 7 |-> out == {in[63:8], 8'h01});

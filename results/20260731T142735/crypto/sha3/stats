@@ -1,0 +1,6 @@
+{"f_permutation.v":{"duration":111,"input_tokens":787,"output_tokens":12482}}
+{"keccak.v":{"duration":159,"input_tokens":1252,"output_tokens":17941}}
+{"padder1.v":{"duration":58,"input_tokens":525,"output_tokens":6832}}
+{"padder.v":{"duration":134,"input_tokens":1140,"output_tokens":14085}}
+{"rconst2in1.v":{"duration":68,"input_tokens":939,"output_tokens":8844}}
+{"round2in1.v":{"duration":149,"input_tokens":4255,"output_tokens":18959}}

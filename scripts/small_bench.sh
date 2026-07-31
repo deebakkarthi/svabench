@@ -22,8 +22,7 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 # These are the ids of the benchmarks
 # I need the categories in addition to the name in order to retrive them
 # Idk if this look ugly or not but right now I do require the category
-#benchmarks=('comm/sockit_owm' 'crypto/sha3')
-benchmarks=('comm/sockit_owm')
+benchmarks=('comm/sockit_owm' 'crypto/sha3')
 result_dir="results/$(date +"%Y%m%dT%H%M%S")"
 mkdir -p "$result_dir"
 
@@ -53,8 +52,9 @@ for benchmark in "${benchmarks[@]}"; do
 
 		session_file="$project_dir/$session_id.jsonl"
 
-		./scripts/_claude_jsonl_duration.sh "$session_file"
-		./scripts/_claude_jsonl_usage.sh "$session_file"
+		duration=$(./scripts/_claude_jsonl_duration.sh "$session_file")
+		usage=$(./scripts/_claude_jsonl_usage.sh "$session_file")
+		echo $duration $usage | jq -c -s "{\"$(basename $file)\": (add)}" >> "$result_dir/$benchmark/stats"
 
 		# Cleanup
 		rm -rf "$session_file"

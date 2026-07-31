@@ -1,0 +1,10 @@
+// padder
+assert property (buffer_full == i[8]);
+assert property (out_ready == buffer_full);
+assert property (accept == ((~state) & in_ready & (~buffer_full)));
+assert property (update == ((accept | (state & (~buffer_full))) & (~done)));
+assert property (~state |-> ~done);
+assert property (state |=> state);
+assert property (done |=> done);
+assert property (is_last |=> state);
+assert property ((state & out_ready) |=> done);

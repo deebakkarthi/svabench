@@ -1,0 +1,85 @@
+// round2in1
+
+// Input extraction (sample lanes)
+assert property (@* a[0][0] == in[1599:1536]);
+assert property (@* a[4][4] == in[63:0]);
+
+// Round 1: Parity
+assert property (@* b[0] == (a[0][0] ^ a[0][1] ^ a[0][2] ^ a[0][3] ^ a[0][4]));
+assert property (@* b[4] == (a[4][0] ^ a[4][1] ^ a[4][2] ^ a[4][3] ^ a[4][4]));
+
+// Round 1: Theta step (sample)
+assert property (@* c[0][0] == (a[0][0] ^ b[4] ^ {b[1][62:0], b[1][63]}));
+assert property (@* c[1][0] == (a[1][0] ^ b[0] ^ {b[2][62:0], b[2][63]}));
+assert property (@* c[4][0] == (a[4][0] ^ b[3] ^ {b[0][62:0], b[0][63]}));
+
+// Round 1: Rho step (sample)
+assert property (@* d[0][0] == c[0][0]);
+assert property (@* d[1][0] == {c[1][0][62:0], c[1][0][63]});
+assert property (@* d[2][0] == {c[2][0][1:0], c[2][0][63:2]});
+assert property (@* d[3][0] == {c[3][0][35:0], c[3][0][63:36]});
+assert property (@* d[4][0] == {c[4][0][36:0], c[4][0][63:37]});
+
+// Round 1: Pi step (sample)
+assert property (@* e[0][0] == d[0][0]);
+assert property (@* e[0][2] == d[1][0]);
+assert property (@* e[0][1] == d[3][0]);
+assert property (@* e[1][0] == d[1][1]);
+
+// Round 1: Chi step (sample)
+assert property (@* f[0][0] == (e[0][0] ^ ((~e[1][0]) & e[2][0])));
+assert property (@* f[1][0] == (e[1][0] ^ ((~e[2][0]) & e[3][0])));
+assert property (@* f[4][0] == (e[4][0] ^ ((~e[0][0]) & e[1][0])));
+
+// Round 1: Iota step
+assert property (@* g[0][0][0] == (f[0][0][0] ^ round_const_1[0]));
+assert property (@* g[0][0][1] == (f[0][0][1] ^ round_const_1[1]));
+assert property (@* g[0][0][2] == f[0][0][2]);
+assert property (@* g[0][0][3] == (f[0][0][3] ^ round_const_1[3]));
+assert property (@* g[0][0][7] == (f[0][0][7] ^ round_const_1[7]));
+assert property (@* g[0][0][15] == (f[0][0][15] ^ round_const_1[15]));
+assert property (@* g[0][0][31] == (f[0][0][31] ^ round_const_1[31]));
+assert property (@* g[0][0][63] == (f[0][0][63] ^ round_const_1[63]));
+assert property (@* g[1][0] == f[1][0]);
+
+// Round 2: Parity
+assert property (@* bb[0] == (g[0][0] ^ g[0][1] ^ g[0][2] ^ g[0][3] ^ g[0][4]));
+assert property (@* bb[4] == (g[4][0] ^ g[4][1] ^ g[4][2] ^ g[4][3] ^ g[4][4]));
+
+// Round 2: Theta step (sample)
+assert property (@* cc[0][0] == (g[0][0] ^ bb[4] ^ {bb[1][62:0], bb[1][63]}));
+assert property (@* cc[1][0] == (g[1][0] ^ bb[0] ^ {bb[2][62:0], bb[2][63]}));
+assert property (@* cc[4][0] == (g[4][0] ^ bb[3] ^ {bb[0][62:0], bb[0][63]}));
+
+// Round 2: Rho step (sample)
+assert property (@* dd[0][0] == cc[0][0]);
+assert property (@* dd[1][0] == {cc[1][0][62:0], cc[1][0][63]});
+assert property (@* dd[2][0] == {cc[2][0][1:0], cc[2][0][63:2]});
+assert property (@* dd[3][0] == {cc[3][0][35:0], cc[3][0][63:36]});
+assert property (@* dd[4][0] == {cc[4][0][36:0], cc[4][0][63:37]});
+
+// Round 2: Pi step (sample)
+assert property (@* ee[0][0] == dd[0][0]);
+assert property (@* ee[0][2] == dd[1][0]);
+assert property (@* ee[0][1] == dd[3][0]);
+assert property (@* ee[1][0] == dd[1][1]);
+
+// Round 2: Chi step (sample)
+assert property (@* ff[0][0] == (ee[0][0] ^ ((~ee[1][0]) & ee[2][0])));
+assert property (@* ff[1][0] == (ee[1][0] ^ ((~ee[2][0]) & ee[3][0])));
+assert property (@* ff[4][0] == (ee[4][0] ^ ((~ee[0][0]) & ee[1][0])));
+
+// Round 2: Iota step
+assert property (@* gg[0][0][0] == (ff[0][0][0] ^ round_const_2[0]));
+assert property (@* gg[0][0][1] == (ff[0][0][1] ^ round_const_2[1]));
+assert property (@* gg[0][0][2] == ff[0][0][2]);
+assert property (@* gg[0][0][3] == (ff[0][0][3] ^ round_const_2[3]));
+assert property (@* gg[0][0][7] == (ff[0][0][7] ^ round_const_2[7]));
+assert property (@* gg[0][0][15] == (ff[0][0][15] ^ round_const_2[15]));
+assert property (@* gg[0][0][31] == (ff[0][0][31] ^ round_const_2[31]));
+assert property (@* gg[0][0][63] == (ff[0][0][63] ^ round_const_2[63]));
+assert property (@* gg[1][0] == ff[1][0]);
+
+// Output packing (sample lanes)
+assert property (@* out[1599:1536] == gg[0][0]);
+assert property (@* out[63:0] == gg[4][4]);

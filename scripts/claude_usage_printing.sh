@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# 
+# This script is just to test out the logic required extract usage information
+# from claude JSONL files
 
 unset ANTHROPIC_API_KEY
 # Claude uses the following format:

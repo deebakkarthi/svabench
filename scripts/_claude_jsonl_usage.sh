@@ -27,6 +27,18 @@ else
 	input_file="/dev/stdin"
 fi
 
+
+# First we slurp all the JSONL objects into a single array
+# Only then can we perform unique_by
+# After that we explode them back using .[]
+# This allows us to aggregate within each entry
+# I don't know how to put them back into a single array again
+# So doing the easy thing of just piping it to another jq instance and
+# slurpping
+#
+# The second jq operates on a single array
+# It uses map() to essentially produce another array with just the selected
+# field and pipes it to add to aggregate
 jq -M 'select(.type == "assistant")' "$input_file" \
 	| jq -M -s 'unique_by(.requestId)
 		| .[]

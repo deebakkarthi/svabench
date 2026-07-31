@@ -22,7 +22,8 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 # These are the ids of the benchmarks
 # I need the categories in addition to the name in order to retrive them
 # Idk if this look ugly or not but right now I do require the category
-benchmarks=('comm/sockit_owm' 'crypto/sha3')
+#benchmarks=('comm/sockit_owm' 'crypto/sha3')
+benchmarks=('comm/sockit_owm')
 result_dir="results/$(date +"%Y%m%dT%H%M%S")"
 mkdir -p "$result_dir"
 
@@ -41,7 +42,23 @@ for benchmark in "${benchmarks[@]}"; do
 		# Replace file extension with .sva
 		output_file="$sva_dir/$(basename $file | sed 's/\.[^.]*$//').sva"
 
-		claude_infer "$prompt" > "$output_file"
+		model="haiku"
+		session_id=$(uuidgen)
+
+		project_dir="$HOME/.claude/projects/$(realpath $(pwd) | sed 's/[^a-zA-Z0-9]/-/g')"
+		# Remove all the previous jsonl files
+		rm -rf $project_dir/*
+
+		claude_infer "$prompt" "$model" "$session_id" > "$output_file"
+
+		session_file="$project_dir/$session_id.jsonl"
+
+		./scripts/_claude_jsonl_duration.sh "$session_file"
+		./scripts/_claude_jsonl_usage.sh "$session_file"
+
+		# Cleanup
+		rm -rf "$session_file"
+		rm -rf $project_dir/*
 
 		# Sometimes backtick can be present
 		./scripts/_rm_fenced_code_blocks.sh "$output_file"

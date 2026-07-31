@@ -46,9 +46,10 @@ claude_infer () {
 	fi
 
 
+	# We want $session to be split. So DONT quote
 	echo "$1" | claude "${CLAUDE_DEFAULT_ARGS[@]}" \
 		--model "$model" \
-		"$session"
+		$session
 }
 
 _test () {

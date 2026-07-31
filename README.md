@@ -9,6 +9,7 @@ SystemVerilog Assertion Generation Benchmark for Large Language Models
 	modify `scripts/preproc.sh` to use that instead.
 	- `iverilog`'s preprocessor `ivpp` isn't as customizable as `vppreproc`
 	- TODO: write a small binary in `slang` to perform this
+- `jq` for extracting token information from `claude`
 
 # Python Enviroment
 Though Claude's SDK is available in many languages, this project uses

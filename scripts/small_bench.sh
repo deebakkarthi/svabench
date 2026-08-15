@@ -7,7 +7,7 @@
 # RATIONALE BEHIND THE BENCHMARKS CHOSEN
 # --------------------------------------
 # I want this to be really small. This allows me to test the harness without
-# worry about cost. I want the test to actually call claude, so this really
+# worrying about cost. I want the test to actually call claude, so this really
 # matters
 # sockit_owm is the smallest but it is a single file and has a single module
 #
@@ -49,7 +49,7 @@ for benchmark in "${benchmarks[@]}"; do
 			model="haiku"
 
 			# Prompt preparation
-			prompt=$(<prompts/barebones.md)
+			prompt=$(<prompts/barebones.txt)
 			rtl=$(<$(realpath $file))
 			prompt="${prompt/\{rtl\}/"$rtl"}"
 		else

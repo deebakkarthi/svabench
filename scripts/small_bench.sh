@@ -16,8 +16,20 @@
 # I have multiplicty of benchmarks as well as files. So the full benchmark
 # will just have a larger starting array and nothing more
 
+PROGNAME="$(basename $0)"
+
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 . "$SCRIPT_DIR/lib/claude.bash"
+
+# Check if we are actually logged in before executing
+# It is easier to check this than check the output and see if
+# "OAuth expired: ..." being written to the file. I also don't know if
+# claude will output an exit code of 1 if that happens
+# But the below function is guaranteed to exit with 1 if not logged in
+if [[ ! claude_logged_in ]]; then
+	echo "$PROGNAME: Claude not logged in"
+	exit 1
+fi
 
 # These are the ids of the benchmarks
 # I need the categories in addition to the name in order to retrive them
@@ -32,21 +44,32 @@ for benchmark in "${benchmarks[@]}"; do
 	mkdir -p "$sva_dir"
 	# You have to then iterate over all the rtl files
 	for file in bench/"$benchmark"/rtl/*; do
-		# Prompt preparation
-		prompt=$(<prompts/barebones.md)
-		rtl=$(<$(realpath $file))
-		prompt="${prompt/\{rtl\}/"$rtl"}"
+		# If DEBUG is not defined
+		if [[ -z $DEBUG ]]; then
+			model="haiku"
+
+			# Prompt preparation
+			prompt=$(<prompts/barebones.md)
+			rtl=$(<$(realpath $file))
+			prompt="${prompt/\{rtl\}/"$rtl"}"
+		else
+			# Always use haiku for debugging
+			# I know that haiku is also used above but that may
+			# change. DONT change this. I cannot use readonly
+			# for some reason
+			model="haiku"
+			prompt="Say Potato and only potato"
+		fi
 
 		# path to store the output assertions
 		# Replace file extension with .sva
 		output_file="$sva_dir/$(basename $file | sed 's/\.[^.]*$//').sva"
 
-		model="haiku"
 		session_id=$(uuidgen)
+		project_dir="$(claude_project_dir "$(pwd)")"
 
-		project_dir="$HOME/.claude/projects/$(realpath $(pwd) | sed 's/[^a-zA-Z0-9]/-/g')"
-		# Remove all the previous jsonl files
-		rm -rf $project_dir/*
+		# Delete stuff not to pollute the context
+		claude_cleanup "$(pwd)"
 
 		claude_infer "$prompt" "$model" "$session_id" > "$output_file"
 
@@ -56,11 +79,7 @@ for benchmark in "${benchmarks[@]}"; do
 		usage=$(./scripts/_claude_jsonl_usage.sh "$session_file")
 		echo $duration $usage | jq -c -s "{\"$(basename $file)\": (add)}" >> "$result_dir/$benchmark/stats"
 
-		# Cleanup
-		rm -rf "$session_file"
-		rm -rf $project_dir/*
-
-		# Sometimes backtick can be present
-		./scripts/_rm_fenced_code_blocks.sh "$output_file"
+		# Cleanup up after oneself
+		claude_cleanup "$(pwd)"
 	done
 done

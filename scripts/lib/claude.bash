@@ -22,6 +22,10 @@ readonly CLAUDE_DEFAULT_ARGS=(
 # 	- $1 prompt
 #	- $2 model=haiku
 #	- $3 uuid=None
+#
+# claude_infer will not cleanup after itself
+# Please clean the $uuid folder beforehand and afterwards
+# Else, the context will be polluted.
 #######################################
 claude_infer () {
 	# Disable this else claude will start incurring API costs
@@ -50,6 +54,36 @@ claude_infer () {
 	echo "$1" | claude "${CLAUDE_DEFAULT_ARGS[@]}" \
 		--model "$model" \
 		$session
+}
+
+claude_sanitize_path() {
+	echo "$1" | sed 's/[^a-zA-Z0-9]/-/g'
+}
+
+#####################################
+# Deletes all the JSONL files for a particular project
+# Globals:
+# 	None
+# Arguments:
+# 	$1 - working_dir
+# 		The working dir claude was invoked in
+#######################################
+claude_cleanup() {
+	rm -rf $(claude_project_dir "$1")/*
+}
+
+
+claude_project_dir() {
+	working_dir="$(realpath "$1")"
+	# Sanitize only the working dir. Notice that pipe is inside. Don't
+	# sanitize the whole thing
+	echo "$HOME/.claude/projects/"$(echo "$working_dir" | sed 's/[^a-zA-Z0-9]/-/g')""
+}
+
+
+claude_logged_in() {
+	claude auth status > /dev/null &2>1
+	return $?
 }
 
 _test () {

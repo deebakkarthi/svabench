@@ -5,7 +5,12 @@
 PROGNAME="$(basename "$0")"
 
 usage () {
-	echo -e "Usage: $PROGNAME FILE\n  FILE\tfile to remove backticks from"
+	cat<<-EOF
+	Usage: $PROGNAME FILE
+	  FILE	file to remove backticks from
+
+	$PROGNAME alters FILE inplace
+	EOF
 }
 
 if [[ $# -ne 1 ]]; then
@@ -19,4 +24,6 @@ if [[ ! -f "$1" ]]; then
 	exit 1
 fi
 
-sed -i '/^```/d' "$1"
+# Make it portable instead of -i
+sed '/^```/d' "$1" > "$1".$$
+mv "$1".$$ "$1"

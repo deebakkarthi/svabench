@@ -10,12 +10,13 @@ For each module, output a comment with the module name followed by its
 assertions, in exactly this format:
 
 <output_format>
-// module_name
+// module foo
 assert property (property_specification);
-assert property (property_specification);
+...
 
-// next_module_name
+// module bar
 assert property (property_specification);
+...
 </output_format>
 
 Do not include module declarations or instantiate any modules. Output

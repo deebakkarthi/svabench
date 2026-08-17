@@ -9,18 +9,26 @@
 
 PROGNAME="$(basename "$0")"
 
+_D=false
+_V=false
+
+log() {
+	if [[ $_V = true ]]; then
+		echo "$PROGNAME: [INFO] [$(date '+%Y-%m-%d %H:%M:%S')] $*"
+	fi
+}
 
 usage() {
 	cat<<-EOF
-	Usage: $PROGNAME [-h | -d] FILE
+	Usage: $PROGNAME [-h | -d | -v] FILE
 	  FILE	the file to split
 	  -d	delete the original file
+	  -v	verbose
 	EOF
 }
 
-_D=false
 
-while getopts 'hd' opt; do
+while getopts 'hdv' opt; do
 	case "$opt" in
 		h)
 			usage
@@ -29,12 +37,16 @@ while getopts 'hd' opt; do
 		d)
 			_D=true
 			;;
+		v)
+			_V=true
+			;;
 		*)
 			>&2 usage
 			exit 1
 			;;
 	esac
 done
+
 shift $((OPTIND - 1))
 
 if [[ -z "$1" ]]; then
@@ -52,18 +64,30 @@ fi
 
 input_file=$(realpath "$input_file")
 
+log "$input_file exists"
+
 # Move to a tmp dir to prevent clogging up OG dir
 tmp=$(mktemp -d)
 pushd "$tmp" > /dev/null
 
+log "cd into $(pwd)"
+
 csplit --silent --elide-empty-files $input_file '/^\/\/ module/' '{*}'
 for f in *; do
+	log "processing $f"
 	# Grab the module name from the first line of the file
 	new_name="$(sed -n '1s/^\/\/ module //p' "$f").sv"
-	# rename
-	mv "$f" "$new_name"
-	# Move to the OG dir
-	mv "$new_name" "$(dirs +1)"
+
+	# Only move stuff if module name was found
+	if [[ $new_name != ".sv" ]]; then
+		# rename
+		mv "$f" "$new_name"
+		# Move to the OG dir
+		# This doesn't work for some reason
+		# But when I cp after popd it works
+		# BRUHHHHH
+		#cp --verbose "$new_name" "$(dirs +1)"
+	fi
 done
 
 # Go back to OG dir
@@ -73,6 +97,9 @@ popd > /dev/null
 if "$_D"; then
 	rm $input_file
 fi
+
+# copy back
+cp "$tmp"/*.sv .
 
 # Cleanup
 rm -rf "$tmp"

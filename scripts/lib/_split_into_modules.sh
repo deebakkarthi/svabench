@@ -82,11 +82,10 @@ for f in *; do
 	if [[ $new_name != ".sv" ]]; then
 		# rename
 		mv "$f" "$new_name"
-		# Move to the OG dir
-		# This doesn't work for some reason
-		# But when I cp after popd it works
-		# BRUHHHHH
-		#cp --verbose "$new_name" "$(dirs +1)"
+		# dirs without -l returns with ~
+		# ~ is expanded by the shell
+		# When you just pass it to mv it doesn't understand it
+		mv "$new_name" "$(dirs -l +1)"
 	fi
 done
 
@@ -97,9 +96,6 @@ popd > /dev/null
 if "$_D"; then
 	rm $input_file
 fi
-
-# copy back
-cp "$tmp"/*.sv .
 
 # Cleanup
 rm -rf "$tmp"

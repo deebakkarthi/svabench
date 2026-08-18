@@ -21,12 +21,44 @@ PROGNAME="$(basename $0)"
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 . "$SCRIPT_DIR/lib/claude.bash"
 
+# Use haiku by default
+MODEL=haiku
+
+usage() {
+	cat<<-EOF
+	Usage: $PROGNAME [-h | -m MODEL]
+	  -h		Print out this help message
+	  -m MODEL	The model to be used. The default model is haiku
+	EOF
+}
+
+while getopts 'hm:' opts; do
+	case $opts in
+		h)
+			usage
+			exit 0
+			;;
+		m)
+			MODEL="$OPTARG"
+			if [[ ! "$MODEL" =~ ^(haiku|sonnet|opus|fable)$ ]]; then
+				>&2 printf "$PROGNAME: Invalid model name\nAllowed args: haiku|sonnet|opus|fable\n"
+				exit 1
+			fi
+			;;
+		*)
+			>&2 usage
+			exit 1
+			;;
+	esac
+
+done
+
 # Check if we are actually logged in before executing
 # It is easier to check this than check the output and see if
 # "OAuth expired: ..." being written to the file. I also don't know if
 # claude will output an exit code of 1 if that happens
 # But the below function is guaranteed to exit with 1 if not logged in
-if [[ ! claude_logged_in ]]; then
+if ! claude_logged_in ; then
 	echo "$PROGNAME: Claude not logged in"
 	exit 1
 fi
@@ -45,9 +77,9 @@ for benchmark in "${benchmarks[@]}"; do
 	# You have to then iterate over all the rtl files
 	for file in bench/"$benchmark"/rtl/*; do
 		# If DEBUG is not defined
+		# DEBUG should only be used to check if the claude binary
+		# is operational.
 		if [[ -z $DEBUG ]]; then
-			model="haiku"
-
 			# Prompt preparation
 			prompt=$(<prompts/barebones.txt)
 			rtl=$(<$(realpath $file))
@@ -57,7 +89,7 @@ for benchmark in "${benchmarks[@]}"; do
 			# I know that haiku is also used above but that may
 			# change. DONT change this. I cannot use readonly
 			# for some reason
-			model="haiku"
+			MODEL="haiku"
 			prompt="Say Potato and only potato"
 		fi
 
@@ -71,13 +103,13 @@ for benchmark in "${benchmarks[@]}"; do
 		# Delete stuff not to pollute the context
 		claude_cleanup "$(pwd)"
 
-		claude_infer "$prompt" "$model" "$session_id" > "$output_file"
+		claude_infer "$prompt" "$MODEL" "$session_id" > "$output_file"
 
 		session_file="$project_dir/$session_id.jsonl"
 
 		duration=$(./scripts/_claude_jsonl_duration.sh "$session_file")
-		usage=$(./scripts/_claude_jsonl_usage.sh "$session_file")
-		echo $duration $usage | jq -c -s "{\"$(basename $file)\": (add)}" >> "$result_dir/$benchmark/stats"
+		claude_usage=$(./scripts/_claude_jsonl_usage.sh "$session_file")
+		echo $duration $claude_usage | jq -c -s "{\"$(basename $file)\": (add)}" >> "$result_dir/$benchmark/stats"
 
 		# Cleanup up after oneself
 		claude_cleanup "$(pwd)"

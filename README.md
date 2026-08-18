@@ -12,6 +12,7 @@ SystemVerilog Assertion Generation Benchmark for Large Language Models
 - `jq` for extracting token information from `claude`
 - `svabench_utils` for many things. Please make sure that the binaries are
 present in `$PATH`. `svabench` assumes that they will be so.
+- `sponge`
 
 # Python Enviroment
 Though Claude's SDK is available in many languages, this project uses

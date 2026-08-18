@@ -76,7 +76,7 @@ for benchmark in "${benchmark_arr[@]}"; do
 	# Each benchmark might have multiple .sva files
 	# The previous step should ONLY produce .sva files as we are
 	# specifically looking for those here.
-	for file in *; do
+	for file in *.sva; do
 		log "Processing $file"
 
 		# Remove backticks
@@ -85,11 +85,13 @@ for benchmark in "${benchmark_arr[@]}"; do
 		# Split each .sva file into potentially multiple .sv files
 		# This will also delete the .sva file
 		$SCRIPT_DIR/lib/_split_into_modules.sh -d "$file"
-
-		# Loop over each .sv file and run assert_decl_from_sva
-		#find . -name "*.sv" -exec\
-		#       	bash -c 'assert_decl_from_sva -m "$(basename {} | sed 's/\.[^.]*$//')" -f {}' \;
 	done
+	# Loop over each .sv file and run assert_decl_from_sva
+	# Doing this separately as we don't know how many .sv files will
+	# be created. If you do it above then you will run assert_decl_from_sva
+	# on the same file multiple times
+	find . -name "*.sv" -exec\
+		bash -c 'assert_decl_from_sva -m "$(basename {} | sed 's/\.[^.]*$//')" -f {} | sponge {}' \;
 
 	popd > /dev/null
 	log "cd back into $(pwd)"

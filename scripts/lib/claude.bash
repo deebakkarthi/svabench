@@ -82,7 +82,7 @@ claude_project_dir() {
 
 
 claude_logged_in() {
-	claude auth status > /dev/null &2>1
+	claude auth status > /dev/null 2>&1
 	return $?
 }
 

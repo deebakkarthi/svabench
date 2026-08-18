@@ -24,6 +24,7 @@ if [[ ! -f "$1" ]]; then
 	exit 1
 fi
 
+temp=$(mktemp)
 # Make it portable instead of -i
-sed '/^```/d' "$1" > "$1".$$
-mv "$1".$$ "$1"
+sed '/^```/d' "$1" > "$temp"
+mv "$temp" "$1"

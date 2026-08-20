@@ -18,22 +18,29 @@
 
 PROGNAME="$(basename $0)"
 
-SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+export SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 . "$SCRIPT_DIR/lib/claude.bash"
+. "$SCRIPT_DIR/lib/utils.bash"
 
-# Use haiku by default
+# Defaults
 MODEL=haiku
+PROMPT_FILE="prompts/barebones.txt"
 
 usage() {
 	cat<<-EOF
-	Usage: $PROGNAME [-h | -m MODEL]
-	  -h		Print out this help message
-	  -m MODEL	The model to be used. The default model is haiku
+	Usage: $PROGNAME [-h] [-m MODEL] [-p PROMPT_FILE] [-v]
+	  -h			Print out this help message
+	  -m MODEL		The model to be used. The default model is haiku
+	  -p PROMPT_FILE	The file to use as the prompt. Default is prompts/barebones.txt
+	  -v			Verbose
 	EOF
 }
 
-while getopts 'hm:' opts; do
+while getopts 'vhm:p:' opts; do
 	case $opts in
+		v)
+			_V=true
+			;;
 		h)
 			usage
 			exit 0
@@ -41,11 +48,21 @@ while getopts 'hm:' opts; do
 		m)
 			# Check if model is valid
 			if [[ ! "$OPTARG" =~ ^(haiku|sonnet|opus|fable)$ ]]; then
-				>&2 echo -ne "$PROGNAME: Invalid model name\nAllowed args: haiku|sonnet|opus|fable\n"
+				>&2 echo -ne "$PROGNAME: "$OPTARG" is an invalid model name\nAllowed args: haiku|sonnet|opus|fable\n"
 				exit 1
 			fi
 
 			MODEL="$OPTARG"
+			dbk_log "Changing model to $MODEL"
+			;;
+		p)
+			if [[ ! -f "$OPTARG" ]]; then
+				>&2 echo -ne "$PROGNAME: $OPTARG doesn't exist"
+				exit 1
+			fi
+
+			PROMPT_FILE="$OPTARG"
+			dbk_log "Changing log file to $PROMPT_FILE"
 			;;
 		*)
 			>&2 usage
@@ -74,26 +91,19 @@ mkdir -p "$result_dir"
 
 # This is the loop to iterate over the benchmarks
 for benchmark in "${benchmarks[@]}"; do
+	dbk_log "Processing $benchmark"
 	sva_dir="$result_dir/$benchmark/sva"
 	mkdir -p "$sva_dir"
 	# You have to then iterate over all the rtl files
 	for file in bench/"$benchmark"/rtl/*; do
-		# If DEBUG is not defined
-		# DEBUG should only be used to check if the claude binary
-		# is operational.
-		if [[ -z $DEBUG ]]; then
-			# Prompt preparation
-			prompt=$(<prompts/barebones.txt)
-			rtl=$(<$(realpath $file))
-			prompt="${prompt/\{rtl\}/"$rtl"}"
-		else
-			# Always use haiku for debugging
-			# I know that haiku is also used above but that may
-			# change. DONT change this. I cannot use readonly
-			# for some reason
-			MODEL="haiku"
-			prompt="Say Potato and only potato"
-		fi
+
+		dbk_log "\tProcessing $benchmark->$file"
+
+		# Prompt preparation
+		# Pass in debug prompt as an opt-arg
+		prompt=$(<"$PROMPT_FILE")
+		rtl=$(<$(realpath $file))
+		prompt="${prompt/\{rtl\}/"$rtl"}"
 
 		# path to store the output assertions
 		# Replace file extension with .sva
@@ -112,6 +122,7 @@ for benchmark in "${benchmarks[@]}"; do
 		duration=$(./scripts/_claude_jsonl_duration.sh "$session_file")
 		claude_usage=$(./scripts/_claude_jsonl_usage.sh "$session_file")
 		echo $duration $claude_usage | jq -c -s "{\"$(basename $file)\": (add)}" >> "$result_dir/$benchmark/stats"
+		dbk_log "Claude took $duration and used $claude_usage"
 
 		# Cleanup up after oneself
 		claude_cleanup "$(pwd)"

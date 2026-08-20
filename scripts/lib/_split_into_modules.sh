@@ -9,14 +9,9 @@
 
 PROGNAME="$(basename "$0")"
 
-_D=false
-_V=false
+. "$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/claude.bash"
 
-log() {
-	if [[ $_V = true ]]; then
-		echo "$PROGNAME: [INFO] [$(date '+%Y-%m-%d %H:%M:%S')] $*"
-	fi
-}
+_D=false
 
 usage() {
 	cat<<-EOF

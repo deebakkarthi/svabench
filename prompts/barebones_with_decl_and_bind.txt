@@ -1,0 +1,29 @@
+Generate SystemVerilog Assertions that hold for the RTL below exactly as
+written. Do not assume any intended or reference behavior beyond what the
+code itself implements.
+
+<rtl>
+{rtl}
+</rtl>
+
+- For each module called `foo` , declare a new module `foo_assert`
+- Declare all the symbols you are gonna use as `input`
+- At the end `bind` `foo_assert` to `foo` and call it `foo_assert_instance`.
+
+An example output is given below
+
+<output_format>
+module foo_assert(<symbols used>)
+assert property (property_specification);
+...
+endmodule
+bind foo foo_assert foo_assert_instance (.*);
+
+module bar_assert(<symbols used>);
+assert property (property_specification);
+...
+endmodule
+bind bar bar_assert bar_assert_instance (.*);
+</output_format>
+
+Output nothing outside this format, not even backticks.

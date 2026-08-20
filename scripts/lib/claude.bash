@@ -2,6 +2,10 @@
 # 
 # Set of common functions involving claude
 
+
+# Source utils to log
+. "$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/utils.bash"
+
 # args that cannot be changed by the user
 readonly CLAUDE_DEFAULT_ARGS=(
 --print
@@ -30,6 +34,8 @@ readonly CLAUDE_DEFAULT_ARGS=(
 claude_infer () {
 	# Disable this else claude will start incurring API costs
 	unset ANTHROPIC_API_KEY
+	local model
+	local session
 
 	# Use the second arg as the model
 	if [[ ! -z "$2" ]]; then
@@ -74,7 +80,7 @@ claude_cleanup() {
 
 
 claude_project_dir() {
-	working_dir="$(realpath "$1")"
+	local working_dir="$(realpath "$1")"
 	# Sanitize only the working dir. Notice that pipe is inside. Don't
 	# sanitize the whole thing
 	echo "$HOME/.claude/projects/"$(echo "$working_dir" | sed 's/[^a-zA-Z0-9]/-/g')""
@@ -83,33 +89,7 @@ claude_project_dir() {
 
 claude_logged_in() {
 	claude auth status > /dev/null 2>&1
-	return $?
+	local ret=$?
+	dbk_log "claude auth returned $ret"
+	return $ret
 }
-
-_test () {
-	if [[ $(claude_infer "Say potato and only potato") = "potato" ]]; then
-		echo "claude_infer: PASSED"
-		exit 0
-	else
-		echo "claude_infer: FAILED"
-		exit 1
-	fi
-
-}
-
-main () {
-	_test
-}
-
-if [ "${BASH_SOURCE[0]}" = "$0" ]; then
-	# This script is being run.
-	__name__="__main__"
-else
-	# This script is being sourced.
-	__name__="__source__"
-fi
-
-if [ "$__name__" = "__main__" ]; then
-	main "$@"
-fi
-

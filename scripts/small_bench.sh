@@ -39,11 +39,13 @@ while getopts 'hm:' opts; do
 			exit 0
 			;;
 		m)
-			MODEL="$OPTARG"
-			if [[ ! "$MODEL" =~ ^(haiku|sonnet|opus|fable)$ ]]; then
-				>&2 printf "$PROGNAME: Invalid model name\nAllowed args: haiku|sonnet|opus|fable\n"
+			# Check if model is valid
+			if [[ ! "$OPTARG" =~ ^(haiku|sonnet|opus|fable)$ ]]; then
+				>&2 echo -ne "$PROGNAME: Invalid model name\nAllowed args: haiku|sonnet|opus|fable\n"
 				exit 1
 			fi
+
+			MODEL="$OPTARG"
 			;;
 		*)
 			>&2 usage

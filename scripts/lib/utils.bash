@@ -13,6 +13,6 @@
 
 dbk_log() {
 	if [[ $_V = true ]]; then
-		echo "$PROGNAME: [${2:-INFO}] [$(date '+%Y-%m-%d %H:%M:%S')] $1"
+		echo -e "$PROGNAME: [${2:-INFO}] [$(date '+%Y-%m-%d %H:%M:%S')] $1"
 	fi
 }

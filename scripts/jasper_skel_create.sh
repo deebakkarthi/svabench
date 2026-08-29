@@ -4,6 +4,10 @@
 # appropriate rtl and jasper files
 
 PROGNAME="$(basename "$1")"
+
+# Need this to access scripts after cd-ing into different dirs
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
 usage() {
 	cat<<-EOF
 	Usage: $PROGNAME RESULT_DIR
@@ -23,8 +27,15 @@ fi
 mapfile -t benchmark_arr < <(find "$1" -type d -name sva -printf "%h\n" | sort)
 
 for benchmark in "${benchmark_arr[@]}"; do
+	benchmark_prefix="$(basename "$benchmark")"
+	
 	# Get the category suffix <category>/<benchmark_name>
 	category=$(truncate_path_to_bench $benchmark)
 	# Copy from bench/
 	cp --recursive -f bench/$category/* $benchmark
+
+	# cd in the dir for relative paths
+	pushd $benchmark
+	$SCRIPT_DIR/gen_command_file.sh ./sva > "$benchmark_prefix"_sva.f
+	popd
 done

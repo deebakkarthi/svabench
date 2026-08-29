@@ -7,7 +7,9 @@ code itself implements.
 </rtl>
 
 - For each module called `foo` , declare a new module `foo_assert`
-- Declare all the symbols you are gonna use as `input`
+- Copy over all the parameters from `foo`
+- The port list should have all the symbols that you will reference.
+- Declare all the ports as `input` 
 - At the end `bind` `foo_assert` to `foo` and call it `foo_assert_instance`.
 
 An example output is given below

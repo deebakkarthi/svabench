@@ -90,6 +90,19 @@ claude_project_dir() {
 claude_logged_in() {
 	claude auth status > /dev/null 2>&1
 	local ret=$?
+
 	dbk_log "claude auth returned $ret"
-	return $ret
+
+	# If `claude auth` itself isn't successful return 1
+	if [[ "$ret" != "0" ]]; then
+		return 1
+	fi
+
+	# `claude auth status` just returns if you have ever logged in
+	# It doesn't check if the OAuth token is still valid
+	if [[ $(claude_infer "Say Potato and only Potato") != "Potato" ]];then
+		return 1
+	fi
+
+	return 0
 }

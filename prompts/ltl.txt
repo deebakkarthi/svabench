@@ -1,0 +1,14 @@
+Generate LTL properties that hold true for the RTL file below.
+
+<rtl>
+{rtl}
+</rtl>
+
+Use the standard ASCII notation for LTL operators.
+- X means "next"
+- U means "until"
+- G means "globally"
+- F means "finally"
+- GF means "infinitely often".
+
+Only output the LTL formulas and nothing else.

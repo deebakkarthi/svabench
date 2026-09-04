@@ -1,0 +1,5 @@
+Generate SystemVerilog Assertions that hold true for the RTL file below.
+
+<rtl>
+{rtl}
+</rtl>

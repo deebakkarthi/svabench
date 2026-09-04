@@ -2,7 +2,7 @@
 #
 # Run jasper gold given a result dir
 
-PROGNAME="$(basename "$1")"
+PROGNAME="$(basename "$0")"
 usage() {
 	cat<<-EOF
 	Usage: $PROGNAME RESULT_DIR

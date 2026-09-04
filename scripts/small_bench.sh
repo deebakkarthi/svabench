@@ -77,6 +77,8 @@ done
 # "OAuth expired: ..." being written to the file. I also don't know if
 # claude will output an exit code of 1 if that happens
 # But the below function is guaranteed to exit with 1 if not logged in
+# TODO: This just shows if logged it and not actually working
+# you can be logged in and not be able to prompt without relogging
 if ! claude_logged_in ; then
 	echo "$PROGNAME: Claude not logged in"
 	exit 1
@@ -104,6 +106,8 @@ for benchmark in "${benchmarks[@]}"; do
 		prompt=$(<"$PROMPT_FILE")
 		rtl=$(<$(realpath $file))
 		prompt="${prompt/\{rtl\}/"$rtl"}"
+
+		echo "$prompt" > "$result_dir/$benchmark/prompt"
 
 		# path to store the output assertions
 		# Replace file extension with .sva

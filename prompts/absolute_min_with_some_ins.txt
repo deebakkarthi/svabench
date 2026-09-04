@@ -1,0 +1,7 @@
+Generate concurrent SystemVerilog Assertions that hold true for the RTL file below.
+Your output should be bind-able to the original module. Don't output anything
+besides the code.
+
+<rtl>
+{rtl}
+</rtl>
